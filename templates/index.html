@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask Mock Test</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container-fluid" id="main-container">
+        <div class="row">
+            <div class="col-md-3 bg-light p-3 border-end">
+                <h2>SECTIONS</h2>
+                <p>Test</p>
+            </div>
+            <div class="col-md-6 p-3">
+                <div class="d-flex justify-content-end mb-3">
+                    <div id="timer" class="fw-bold">Time Left: 10:00</div>
+                </div>
+                <div id="question-area">
+                    <div class="question" id="q1">
+                        <h3>Question No. 1</h3>
+                        <p>Average temperature of warm dry summer months ranges between 27°C and 32°C. Most of
+                            their annual rainfall occurs through cyclonic and orographic types of rain. Trees are
+                            normally deciduous. The forest is open and less luxuriant. Most of the forests yield
+                            valuable timber like teak. Other kinds of timber are sal, acacia and eucalyptus. This
+                            is the most likely description of?</p>
+                        <ul class="options list-unstyled">
+                            <li><input type="radio" name="q1" value="a" id="q1a"> <label for="q1a">Hot, Wet
+                                    Equatorial Climate</label></li>
+                            <li><input type="radio" name="q1" value="b" id="q1b"> <label for="q1b">Savannah or
+                                    Sudan Climate</label></li>
+                            <li><input type="radio" name="q1" value="c" id="q1c"> <label for="q1c">Monsoon
+                                    climate</label></li>
+                            <li><input type="radio" name="q1" value="d" id="q1d"> <label for="q1d">Tropical
+                                    Monsoon and Tropical Marine Climates</label></li>
+                        </ul>
+                    </div>
+                    <div class="question" id="q2" style="display: none;">
+                        <h3>Question No. 2</h3>
+                        <p>What is the capital of France?</p>
+                        <ul class="options list-unstyled">
+                            <li><input type="radio" name="q2" value="a" id="q2a"> <label for="q2a">Berlin</label>
+                            </li>
+                            <li><input type="radio" name="q2" value="b" id="q2b"> <label for="q2b">Madrid</label>
+                            </li>
+                            <li><input type="radio" name="q2" value="c" id="q2c"> <label for="q2c">Paris</label>
+                            </li>
+                            <li><input type="radio" name="q2" value="d" id="q2d"> <label for="q2d">Rome</label>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <button class="btn btn-primary" id="mark-review">Mark for Review & Next</button>
+                    <div>
+                        <button class="btn btn-secondary" id="clear-response">Clear Response</button>
+                        <button class="btn btn-success" id="save-next">Save & Next</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3 bg-light p-3 border-start">
+                <div id="user-info" class="mb-3">
+                    <p>jitesh</p>
+                    <p>Answered: <span id="answered">0</span></p>
+                    <p>Marked: <span id="marked">0</span></p>
+                    <p>Not Visited: <span id="not-visited">2</span></p>
+                </div>
+                <hr>
+                <div id="question-numbers" class="d-flex flex-wrap"></div>
+            </div>
+        </div>
+    </div>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+</body>
+
+</html>
