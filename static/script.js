@@ -3,7 +3,7 @@ let answeredQuestions = new Set();
 let markedQuestions = new Set();
 let totalQuestions = 2; // Make sure this matches the number of questions in your HTML
 let timerInterval;
-let timeLeft = 600;
+let timeLeft = 60;
 
 const questionArea = document.getElementById('question-area');
 const questionNumbers = document.getElementById('question-numbers');
