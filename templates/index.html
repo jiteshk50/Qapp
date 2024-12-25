@@ -1,73 +1,62 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Application</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN"
-        crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-
 <body>
-    <!-- Top Header Bar -->
     <header class="bg-primary text-white p-3">
         <div class="container-fluid d-flex justify-content-between align-items-center">
             <h1 class="m-0">Quiz Application</h1>
-            <div>
-                <span class="me-3">Welcome, User!</span>
-                <a href="#" class="btn btn-outline-light btn-sm">Logout</a>
-            </div>
         </div>
     </header>
-
-    <!-- Main Content -->
     <div class="container-fluid" id="main-container">
         <div class="row">
-            <!-- Toggle Button -->
             <div class="col-12 d-flex justify-content-end bg-light py-2">
                 <button class="btn btn-outline-primary btn-sm" id="toggle-panel">Toggle Panel</button>
             </div>
-
-            <!-- Main Question Area -->
             <div class="col-md-9 p-3" id="main-question-area">
                 <div class="d-flex justify-content-end mb-3">
                     <div id="timer" class="fw-bold">Time Left: 10:00</div>
                 </div>
-                <div id="question-area">
-                    <div class="question" id="q1">
-                        <h3>Question No. 1</h3>
-                        <p>Average temperature of warm dry summer months ranges between 27°C and 32°C...</p>
-                        <ul class="options list-unstyled">
-                            <li><input type="radio" name="q1" value="a" id="q1a"> <label for="q1a">Option A</label></li>
-                            <li><input type="radio" name="q1" value="b" id="q1b"> <label for="q1b">Option B</label></li>
-                            <li><input type="radio" name="q1" value="c" id="q1c"> <label for="q1c">Option C</label></li>
-                            <li><input type="radio" name="q1" value="d" id="q1d"> <label for="q1d">Option D</label></li>
-                        </ul>
+                <form method="POST" action="/result" id="quiz-form">
+                    <div id="question-area">
+                        <div class="question" id="q1">
+                            <h3>Question No. 1</h3>
+                            <p>Average temperature of warm dry summer months ranges between 27°C and 32°C...</p>
+                            <ul class="options list-unstyled">
+                                <li><input type="radio" name="q1" value="a" id="q1a"> <label for="q1a">Option A</label></li>
+                                <li><input type="radio" name="q1" value="b" id="q1b"> <label for="q1b">Option B</label></li>
+                                <li><input type="radio" name="q1" value="c" id="q1c"> <label for="q1c">Option C</label></li>
+                                <li><input type="radio" name="q1" value="d" id="q1d"> <label for="q1d">Option D</label></li>
+                            </ul>
+                        </div>
+                        <div class="question" id="q2" style="display: none;">
+                            <h3>Question No. 2</h3>
+                            <p>What is the capital of France?</p>
+                            <ul class="options list-unstyled">
+                                <li><input type="radio" name="q2" value="a" id="q2a"> <label for="q2a">Berlin</label></li>
+                                <li><input type="radio" name="q2" value="b" id="q2b"> <label for="q2b">Madrid</label></li>
+                                <li><input type="radio" name="q2" value="c" id="q2c"> <label for="q2c">Paris</label></li>
+                                <li><input type="radio" name="q2" value="d" id="q2d"> <label for="q2d">Rome</label></li>
+                            </ul>
+                        </div>
                     </div>
-                    <div class="question" id="q2" style="display: none;">
-                        <h3>Question No. 2</h3>
-                        <p>What is the capital of France?</p>
-                        <ul class="options list-unstyled">
-                            <li><input type="radio" name="q2" value="a" id="q2a"> <label for="q2a">Berlin</label></li>
-                            <li><input type="radio" name="q2" value="b" id="q2b"> <label for="q2b">Madrid</label></li>
-                            <li><input type="radio" name="q2" value="c" id="q2c"> <label for="q2c">Paris</label></li>
-                            <li><input type="radio" name="q2" value="d" id="q2d"> <label for="q2d">Rome</label></li>
-                        </ul>
+                    <div class="d-flex justify-content-between">
+                        <button class="btn btn-warning" id="mark-review" type="button">Mark for Review & Next</button>
+                        <div>
+                            <button class="btn btn-secondary" id="clear-response" type="button">Clear Response</button>
+                            <button class="btn btn-success" id="save-next" type="button">Save & Next</button>
+                        </div>
                     </div>
-                </div>
-                <div class="d-flex justify-content-between">
-                    <button class="btn btn-primary" id="mark-review">Mark for Review & Next</button>
-                    <div>
-                        <button class="btn btn-secondary" id="clear-response">Clear Response</button>
-                        <button class="btn btn-success" id="save-next">Save & Next</button>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button class="btn btn-danger" type="submit" id="submit-quiz">Submit Quiz</button>
                     </div>
-                </div>
+                </form>
             </div>
-
-            <!-- Right Panel -->
             <div class="col-md-3 bg-light p-3 border-start collapse show" id="right-panel">
                 <div id="user-info" class="mb-3">
                     <p>jitesh</p>
@@ -81,9 +70,6 @@
         </div>
     </div>
     <script src="{{ url_for('static', filename='script.js') }}"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
-        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>

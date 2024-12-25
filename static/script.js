@@ -3,7 +3,7 @@ let answeredQuestions = [];
 let markedQuestions = [];
 let notVisited = 2;
 let timerInterval;
-let timeLeft = 60; // 10 minutes in seconds
+let timeLeft = 600; // 10 minutes in seconds
 let questionsAnswered = 0;
 let questionsMarked = 0;
 const totalQuestions = 2;
@@ -30,8 +30,8 @@ function updateTimerDisplay() {
         timeLeft--;
     } else {
         clearInterval(timerInterval);
-        alert("Time's Up! Please submit your answers.");
-        disableAllButtons();
+        timerDisplay.textContent = "Time's Up!";
+        document.getElementById('quiz-form').submit();
     }
 }
 
@@ -39,12 +39,6 @@ function updateTimerDisplay() {
 function startTimer() {
     updateTimerDisplay(); // Initial update to display the timer
     timerInterval = setInterval(updateTimerDisplay, 1000);
-}
-
-// Disable all buttons when the timer ends
-function disableAllButtons() {
-    const buttons = document.querySelectorAll('.btn');
-    buttons.forEach(button => button.disabled = true);
 }
 
 // Other functionality for handling questions
@@ -189,6 +183,12 @@ function moveToNextQuestion() {
     displayQuestion(currentQuestion);
 }
 
-// Initialize the application
-updateQuestionNumbers();
-startTimer();
+document.addEventListener('DOMContentLoaded', () => {
+    updateQuestionNumbers();
+    startTimer();
+
+    const quizForm = document.getElementById('quiz-form');
+    quizForm.addEventListener('submit', (event) => {
+        clearInterval(timerInterval);
+    });
+});
