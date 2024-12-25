@@ -17,6 +17,9 @@ const notVisitedDisplay = document.getElementById('not-visited');
 const markReview = document.getElementById('mark-review');
 const clearResponse = document.getElementById('clear-response');
 const saveNext = document.getElementById('save-next');
+const togglePanel = document.getElementById("toggle-panel");
+const rightPanel = document.getElementById("right-panel");
+const mainQuestionArea = document.getElementById("main-question-area");
 
 // Display Timer
 function updateTimerDisplay() {
@@ -58,6 +61,19 @@ function displayQuestion(questionNumber) {
         }
     });
 }
+
+document.addEventListener("DOMContentLoaded", function () {
+    togglePanel.addEventListener("click", () => {
+        rightPanel.classList.toggle("show");
+        if (rightPanel.classList.contains("show")) {
+            mainQuestionArea.classList.remove("col-md-12");
+            mainQuestionArea.classList.add("col-md-9");
+        } else {
+            mainQuestionArea.classList.remove("col-md-9");
+            mainQuestionArea.classList.add("col-md-12");
+        }
+    });
+});
 
 function updateQuestionNumbers() {
     for (let i = 1; i <= totalQuestions; i++) {

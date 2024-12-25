@@ -35,3 +35,13 @@
 #question-numbers {
     justify-content: left; /* Center the question numbers */
 }
+
+/* style.css */
+#main-question-area {
+    transition: flex-basis 0.3s ease;
+}
+
+#right-panel {
+    transition: width 0.3s ease;
+}
+
