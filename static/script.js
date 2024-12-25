@@ -1,12 +1,9 @@
 let currentQuestion = 1;
-let answeredQuestions = [];
-let markedQuestions = [];
-let notVisited = 2;
+let answeredQuestions = new Set();
+let markedQuestions = new Set();
+let totalQuestions = 2; // Make sure this matches the number of questions in your HTML
 let timerInterval;
-let timeLeft = 600; // 10 minutes in seconds
-let questionsAnswered = 0;
-let questionsMarked = 0;
-const totalQuestions = 2;
+let timeLeft = 600;
 
 const questionArea = document.getElementById('question-area');
 const questionNumbers = document.getElementById('question-numbers');
@@ -21,7 +18,6 @@ const togglePanel = document.getElementById("toggle-panel");
 const rightPanel = document.getElementById("right-panel");
 const mainQuestionArea = document.getElementById("main-question-area");
 
-// Display Timer
 function updateTimerDisplay() {
     if (timeLeft >= 0) {
         const minutes = Math.floor(timeLeft / 60);
@@ -35,25 +31,18 @@ function updateTimerDisplay() {
     }
 }
 
-// Start Timer on Page Load
 function startTimer() {
-    updateTimerDisplay(); // Initial update to display the timer
+    updateTimerDisplay();
     timerInterval = setInterval(updateTimerDisplay, 1000);
 }
 
-// Other functionality for handling questions
 function displayQuestion(questionNumber) {
     const questions = document.querySelectorAll('.question');
     questions.forEach(q => q.style.display = 'none');
-    document.getElementById(`q${questionNumber}`).style.display = 'block';
-
-    const numDivs = questionNumbers.querySelectorAll('div');
-    numDivs.forEach((div, index) => {
-        div.classList.remove('active');
-        if (index + 1 === questionNumber) {
-            div.classList.add('active');
-        }
-    });
+    const questionToShow = document.getElementById(`q${questionNumber}`);
+    if (questionToShow) {
+        questionToShow.style.display = 'block';
+    }
 }
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -70,22 +59,43 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function updateQuestionNumbers() {
+    questionNumbers.innerHTML = '';
     for (let i = 1; i <= totalQuestions; i++) {
         const div = document.createElement('div');
         div.textContent = i;
         div.dataset.questionNumber = i;
         div.addEventListener('click', (event) => {
-            const clickedQuestion = parseInt(event.target.dataset.questionNumber);
-            if (!answeredQuestions.includes(clickedQuestion) && !markedQuestions.includes(clickedQuestion) && currentQuestion !== clickedQuestion) {
-                notVisited--;
-                notVisitedDisplay.textContent = notVisited;
-            }
-            currentQuestion = clickedQuestion;
+            currentQuestion = parseInt(event.target.dataset.questionNumber);
             displayQuestion(currentQuestion);
+            updateQuestionNumberStyles();
         });
         questionNumbers.appendChild(div);
     }
-    questionNumbers.firstChild.classList.add('active');
+    updateQuestionNumberStyles();
+}
+
+function updateQuestionNumberStyles() {
+    let answeredCount = answeredQuestions.size;
+    let markedCount = markedQuestions.size;
+    let notVisitedCount = totalQuestions - answeredCount - markedCount;
+
+    answeredDisplay.textContent = answeredCount;
+    markedDisplay.textContent = markedCount;
+    notVisitedDisplay.textContent = notVisitedCount;
+
+    const numDivs = questionNumbers.querySelectorAll('div');
+    numDivs.forEach((div, index) => {
+        const questionNumber = index + 1;
+        div.classList.remove('answered', 'marked', 'active');
+
+        if (questionNumber === currentQuestion) {
+            div.classList.add('active');
+        } else if (answeredQuestions.has(questionNumber)) {
+            div.classList.add('answered');
+        } else if (markedQuestions.has(questionNumber)) {
+            div.classList.add('marked');
+        }
+    });
 }
 
 // Button Event Listeners
@@ -94,39 +104,22 @@ markReview.addEventListener('click', () => {
         displayWarning();
         return;
     }
-    if (!markedQuestions.includes(currentQuestion)) {
-        markedQuestions.push(currentQuestion);
-        questionsMarked++;
-        markedDisplay.textContent = questionsMarked;
-        const numDivs = questionNumbers.querySelectorAll('div');
-        numDivs.forEach((div, index) => {
-            if (index + 1 === currentQuestion) {
-                div.classList.add('marked');
-            }
-        });
+
+    if (answeredQuestions.has(currentQuestion)) {
+        answeredQuestions.delete(currentQuestion);
     }
+    markedQuestions.add(currentQuestion);
     moveToNextQuestion();
+    updateQuestionNumberStyles();
 });
 
 clearResponse.addEventListener('click', () => {
     const currentQuestionRadios = document.querySelectorAll(`input[name="q${currentQuestion}"]`);
     currentQuestionRadios.forEach(radio => radio.checked = false);
 
-    if (answeredQuestions.includes(currentQuestion)) {
-        answeredQuestions = answeredQuestions.filter(q => q !== currentQuestion);
-        questionsAnswered--;
-        answeredDisplay.textContent = questionsAnswered;
-        if (!markedQuestions.includes(currentQuestion)) {
-            notVisited++;
-            notVisitedDisplay.textContent = notVisited;
-        }
-        const numDivs = questionNumbers.querySelectorAll('div');
-        numDivs.forEach((div, index) => {
-            if (index + 1 === currentQuestion) {
-                div.classList.remove('answered');
-            }
-        });
-    }
+    answeredQuestions.delete(currentQuestion);
+    markedQuestions.delete(currentQuestion);
+    updateQuestionNumberStyles();
 });
 
 saveNext.addEventListener('click', () => {
@@ -134,24 +127,11 @@ saveNext.addEventListener('click', () => {
         displayWarning();
         return;
     }
-    const isAnswered = Array.from(document.querySelectorAll(`input[name="q${currentQuestion}"]`)).some(radio => radio.checked);
 
-    if (isAnswered && !answeredQuestions.includes(currentQuestion)) {
-        answeredQuestions.push(currentQuestion);
-        questionsAnswered++;
-        answeredDisplay.textContent = questionsAnswered;
-        const numDivs = questionNumbers.querySelectorAll('div');
-        numDivs.forEach((div, index) => {
-            if (index + 1 === currentQuestion) {
-                div.classList.add('answered');
-            }
-        });
-        if (!markedQuestions.includes(currentQuestion)) {
-            notVisited--;
-            notVisitedDisplay.textContent = notVisited;
-        }
-    }
+    markedQuestions.delete(currentQuestion);
+    answeredQuestions.add(currentQuestion);
     moveToNextQuestion();
+    updateQuestionNumberStyles();
 });
 
 // Helper Functions
@@ -190,5 +170,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const quizForm = document.getElementById('quiz-form');
     quizForm.addEventListener('submit', (event) => {
         clearInterval(timerInterval);
+
+        let score = 0;
+        for (let i = 1; i <= totalQuestions; i++) {
+            const selectedOption = document.querySelector(`input[name="q${i}"]:checked`);
+            if (selectedOption) {
+                if (selectedOption.dataset.correct === "true") {
+                    score++;
+                }
+            }
+        }
+        window.location.href = `result.html?score=${score}&totalQuestions=${totalQuestions}`;
     });
 });
